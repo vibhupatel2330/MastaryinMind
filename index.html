@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Play Audio Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            color: #4CAF50;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            padding: 8px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            padding: 15px;
+            margin: 10px auto;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        audio {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .delete-form {
+            display: inline;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload Audio File</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="audio/*">
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Uploaded Audio Files</h2>
+    {% if files %}
+        <ul>
+            {% for file in files %}
+                <li>
+                    <p>{{ file }}</p>
+                    <audio controls>
+                        <source src="{{ url_for('static', filename='uploads/' + file) }}" type="audio/{{ file.split('.')[-1] }}">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <!-- Delete form for each audio file -->
+                    <form action="{{ url_for('delete_file', filename=file) }}" method="POST" class="delete-form">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No audio files uploaded yet.</p>
+    {% endif %}
+</body>
+</html>
